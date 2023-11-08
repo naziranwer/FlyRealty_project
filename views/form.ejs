@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Form Builder</title>
+</head>
+<body>
+    <h1>Create a New Form</h1>
+
+    <form id="createForm" action="/forms" method="post">
+        <label for="title">Form Title:</label>
+        <input type="text" id="title" name="title" required><br>
+
+        <div id="questions">
+            <!-- Dynamic question fields will be added here -->
+        </div>
+
+        <button type="button" id="addQuestion">Add Question</button>
+        <button type="submit">Create Form</button>
+    </form>
+
+    <script>
+        // JavaScript to add dynamic question fields
+        document.getElementById("addQuestion").addEventListener("click", function() {
+            const questionDiv = document.createElement("div");
+            questionDiv.innerHTML = `
+                <label for="question">Question Text:</label>
+                <input type="text" name="question" required><br>
+                <label for="options">Options (comma-separated):</label>
+                <input type="text" name="options"><br>
+            `;
+            document.getElementById("questions").appendChild(questionDiv);
+        });
+
+        // JavaScript to handle form submission
+        document.getElementById("createForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const title = document.getElementById("title").value;
+            const questions = [];
+            const questionDivs = document.querySelectorAll("#questions > div");
+            questionDivs.forEach(questionDiv => {
+                const questionText = questionDiv.querySelector("input[name='question']").value;
+                const optionsText = questionDiv.querySelector("input[name='options']").value;
+                const options = optionsText ? optionsText.split(",").map(option => option.trim()) : [];
+                questions.push({ text: questionText, options });
+            });
+            // You can perform further actions with the form data here.
+        });
+    </script>
+</body>
+</html>
